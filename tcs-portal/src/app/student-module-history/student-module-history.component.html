@@ -1,0 +1,78 @@
+<div class="container">
+    <div class="row">
+        <mat-card class="example-card mt-3">
+            <mat-card-header>
+                <mat-card-title>Enter Student Name: </mat-card-title>
+            </mat-card-header>
+
+            <mat-card-content>
+                <form class="student-form" [formGroup]="studentForm">
+
+
+                    <mat-form-field appearance="outline" floatLabel='always'>
+                        <input matInput formControlName="first_name" name="first_name">
+                        <mat-label> First Name </mat-label>
+                        <!-- <mat-error *ngIf="editForm.get('fullname').invalid">Please specify your full name</mat-error> -->
+                    </mat-form-field>
+
+                    <br>
+
+                    <mat-form-field appearance="outline" floatLabel='always'>
+                        <input matInput formControlName="last_name" name="last_name">
+                        <mat-label> Last Name </mat-label>
+                        <!-- <mat-error *ngIf="editForm.get('fullname').invalid">Please specify your full name</mat-error> -->
+                    </mat-form-field>
+
+                    <br>
+
+                    <button type='submit' name='submit' mat-raised-button color="primary" (click)="showStudentHistory()"
+                        [disabled]="studentForm.invalid">
+                        See Past Classes
+                    </button>
+
+
+                </form>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+</div>
+
+<div class="container mt-3">
+    <div class="row">
+
+
+
+        <mat-table class="mat-elevation-z2" [dataSource]="lessonsDataSource">
+
+
+            <ng-container matColumnDef="lesson_name">
+                <mat-header-cell *matHeaderCellDef>Course</mat-header-cell>
+                <mat-cell *matCellDef="let lesson">{{lesson.name}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="employee_name">
+                <mat-header-cell *matHeaderCellDef>Coach</mat-header-cell>
+                <mat-cell *matCellDef="let lesson">{{lesson.employee_name}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="from_date">
+                <mat-header-cell *matHeaderCellDef>Start Date</mat-header-cell>
+                <mat-cell *matCellDef="let lesson">{{lesson.from_date}}</mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+        </mat-table>
+
+        <div class="col-md-12 d-flex justify-content-center" *ngIf="lessonsDataSource.loading$ | async">
+            <mat-spinner></mat-spinner>
+        </div>
+
+        <mat-paginator [pageSize]="20" [length]="lessonCount" showFirstLastButtons (page)="onChangedPage($event)"
+            aria-label="Select page of periodic elements">
+        </mat-paginator>
+
+
+    </div>
+</div>
