@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpResponse, HttpHeaders } from "@angular/common/http";
 
-import { BehaviorSubject, Observable } from 'rxjs';
-import { concatMap, delay, last, map, mergeMap, pluck } from 'rxjs/operators';
+import { BehaviorSubject, EMPTY, Observable, of, throwError } from 'rxjs';
+import { catchError, concatMap, delay, last, map, mergeMap, pluck } from 'rxjs/operators';
 
 import { Student } from "../model/student";
 import { Lesson } from "../model/lesson";
@@ -15,7 +15,7 @@ export class LessonService {
 
     constructor(private http: HttpClient) { }
 
-    getStudent(first_name: string, last_name: string): Observable<Student> {
+    getStudent(first_name: string, last_name: string): Observable<Student[]> {
         return this.http.get<Student[]>('https://api.teachworks.com/v1/students',
             {
                 headers: {
@@ -26,14 +26,16 @@ export class LessonService {
                     'last_name': last_name
                 }
             }
-        ).pipe(
-            pluck("0")
         );
     }
 
-    getLessons(student_id: Student, pageIndex: number, pageSize: number) {
+    getLessons(student_id: Student[], pageIndex: number, pageSize: number) {
         // console.log(student_id);
         // console.log("page: " + page + " count: " + per_page);
+        
+        if (student_id.length == 0){
+            return throwError("NO STUDENT FOUND");
+        }
 
         return this.http.get<Lesson[]>('https://api.teachworks.com/v1/lessons',
             {
@@ -41,7 +43,7 @@ export class LessonService {
                     'Authorization': 'Token token=st_live_a8TXhTVAzoDmrN4kfx9-uw',
                 },
                 params: {
-                    'student_id': student_id.id,
+                    'student_id': student_id[0].id,
                     'status': 'Attended',
                     'per_page': pageSize,
                     'page': pageIndex,
@@ -53,9 +55,19 @@ export class LessonService {
     findLessons(first_name: string, last_name: string, pageIndex: number, pageSize: number) {
         return this.getStudent(first_name, last_name)
             .pipe(
-                // delay(500),
-                mergeMap(params => this.getLessons(params, pageIndex, pageSize))
+                concatMap(params => this.getLessons(params, pageIndex, pageSize)
+                .pipe(
+                    catchError( error => {
+                        if ( error.status == 403 ) {
+                            console.log("TW is a n g e r y");
+                            return throwError(error);
+                        } else {
+                            return of([]);
+                        }
+
+                    })
+                ))
             );
     }
-
+      
 }

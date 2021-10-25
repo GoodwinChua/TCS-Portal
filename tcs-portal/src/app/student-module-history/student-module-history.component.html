@@ -39,12 +39,15 @@
 </div>
 
 <div class="container mt-3">
-    <div class="row">
+    <div class="row results">
 
 
 
-        <mat-table class="mat-elevation-z2" [dataSource]="lessonsDataSource">
+        <mat-table class="mat-elevation-z2" [dataSource]="lessonsDataSource" >
 
+            <div *matNoDataRow class ="d-flex justify-content-center align-items-center"> 
+                <h3 class ="align-self-center"> No Results Found </h3> 
+            </div>
 
             <ng-container matColumnDef="lesson_name">
                 <mat-header-cell *matHeaderCellDef>Course</mat-header-cell>
@@ -65,12 +68,14 @@
             <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
         </mat-table>
 
-        <div class="col-md-12 d-flex justify-content-center" *ngIf="lessonsDataSource.loading$ | async">
-            <mat-spinner></mat-spinner>
+        <div class="col-md-12 d-flex justify-content-center spinner" *ngIf="lessonsDataSource.loading$ | async">
+            <mat-spinner diameter = "100"></mat-spinner>
         </div>
 
+        <br>
+
         <mat-paginator [pageSize]="20" [length]="lessonCount" showFirstLastButtons (page)="onChangedPage($event)"
-            aria-label="Select page of periodic elements">
+            class = "mt-1">
         </mat-paginator>
 
 

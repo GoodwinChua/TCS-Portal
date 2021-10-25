@@ -36,17 +36,17 @@ export class StudentModuleHistoryComponent implements OnInit {
 
   showStudentHistory(){
     const {first_name, last_name } = this.studentForm.getRawValue();
-    console.log(first_name + " " + last_name);
+    // console.log(first_name + " " + last_name);
     this.paginator.firstPage();
     this.lessonsDataSource.loadLessons(first_name, last_name, 1, 20);
   }
 
   onChangedPage(pageData: PageEvent){
     const {first_name, last_name } = this.studentForm.getRawValue();
-    console.log(first_name + " " + last_name);
+    // console.log(first_name + " " + last_name);
 
-    console.log(pageData);
-    console.log(pageData.pageIndex + 1, pageData.pageSize);
+    // console.log(pageData);
+    // console.log(pageData.pageIndex + 1, pageData.pageSize);
     this.lessonsDataSource.loadLessons(first_name, last_name, pageData.pageIndex + 1, pageData.pageSize);
     
   }

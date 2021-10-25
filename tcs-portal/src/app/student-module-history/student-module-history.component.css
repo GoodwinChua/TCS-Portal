@@ -1,0 +1,8 @@
+.results {
+    position: relative;
+}
+
+.spinner {
+    position: absolute;
+    top: 2vh;
+}

@@ -12,4 +12,5 @@ export class Lesson {
         this.course_name = course_name;
         this.start_date = start_date;
     }
+
 }

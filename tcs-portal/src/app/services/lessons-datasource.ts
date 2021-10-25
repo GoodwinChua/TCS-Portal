@@ -1,9 +1,9 @@
 import { CollectionViewer, DataSource } from "@angular/cdk/collections";
-import { BehaviorSubject, Observable, of, timer } from "rxjs";
+import { BehaviorSubject, Observable, of, throwError, timer } from "rxjs";
 import { Injectable } from '@angular/core';
 import { Lesson } from "../model/lesson";
 import { LessonService } from "./lessons.service";
-import { catchError, delayWhen, finalize, retryWhen, tap } from "rxjs/operators";
+import { catchError, delayWhen, finalize, mergeMap, retryWhen, tap } from "rxjs/operators";
 
 @Injectable({
     providedIn: 'root'
@@ -32,10 +32,22 @@ export class LessonDataSource extends DataSource<Lesson> {
 
     loadLessons(first_name: string, last_name: string, pageIndex: number, pageSize: number) {
         this.loadingSubject.next(true);
-        this.lessonsSubject.next([]);
+        // this.lessonsSubject.next([]);
         return this.lessonsService.findLessons(first_name, last_name, pageIndex, pageSize)
             .pipe(
                 // finalize(() => this.loadingSubject.next(false)),
+
+                // retryWhen( error => error.pipe(
+                //     tap(console.error),
+                //     mergeMap( (err, i) => i > 1
+                //         ? throwError("ERROR FROM RETRY!!")
+                //         : timer(3000)
+                //         )
+                // )),
+                // catchError(error => {
+                //     console.log("handling locally", error);
+                //     return of([]);
+                // }),
                 retryWhen(errors => {
                     return errors.pipe(
                         delayWhen(() => timer(1000)),
