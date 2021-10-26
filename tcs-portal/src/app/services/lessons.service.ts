@@ -13,7 +13,11 @@ import { Lesson } from "../model/lesson";
 
 export class LessonService {
 
-    constructor(private http: HttpClient) { }
+    student_id: string;
+
+    constructor(private http: HttpClient) { 
+        this.student_id = "0";
+    }
 
     getStudent(first_name: string, last_name: string): Observable<Student[]> {
         return this.http.get<Student[]>('https://api.teachworks.com/v1/students',
@@ -36,6 +40,8 @@ export class LessonService {
         if (student_id.length == 0){
             return throwError("NO STUDENT FOUND");
         }
+
+        this.student_id = student_id[0].id;
 
         return this.http.get<Lesson[]>('https://api.teachworks.com/v1/lessons',
             {

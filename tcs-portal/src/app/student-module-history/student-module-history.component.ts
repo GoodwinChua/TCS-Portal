@@ -19,7 +19,7 @@ export class StudentModuleHistoryComponent implements OnInit {
 
   studentForm: FormGroup;
   lessonsDataSource: LessonDataSource;
-  displayedColumns: string[] = ["lesson_name", "employee_name", "from_date"];
+  displayedColumns: string[] = ["lesson_name", "employee_name", "from_date", "notes"];
   lessonCount = 100;
     
   constructor(private lessonService : LessonService) {
@@ -49,6 +49,17 @@ export class StudentModuleHistoryComponent implements OnInit {
     // console.log(pageData.pageIndex + 1, pageData.pageSize);
     this.lessonsDataSource.loadLessons(first_name, last_name, pageData.pageIndex + 1, pageData.pageSize);
     
+  }
+
+  findNotes(lesson: any){  
+    let participants: [] = lesson.participants;
+    let notes = participants.filter(
+      data => {
+        return data['student_id'] === this.lessonService.student_id;
+      }
+    );
+    //filter returns an array, so just take the first element HAHASKSKSKS
+    return notes[0]['private_notes'];
   }
 
 }

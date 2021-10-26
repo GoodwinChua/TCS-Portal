@@ -63,6 +63,11 @@
                 <mat-header-cell *matHeaderCellDef>Start Date</mat-header-cell>
                 <mat-cell *matCellDef="let lesson">{{lesson.from_date}}</mat-cell>
             </ng-container>
+            <!-- {{findNotes(lesson)}} -->
+            <ng-container matColumnDef="notes">
+                <mat-header-cell *matHeaderCellDef>Notes</mat-header-cell>
+                <mat-cell *matCellDef="let lesson" [innerHTML] = 'findNotes(lesson)'></mat-cell>
+            </ng-container>
 
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
             <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
